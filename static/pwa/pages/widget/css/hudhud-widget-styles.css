@@ -1,0 +1,991 @@
+/* setting variables */
+#hudhud-widget-wrapper {
+    /* colors: */
+
+    /*=========
+    NOTE:
+    --hw-primary-color,
+    --hw-secondary-color, and
+    --hw-size are all set earlier by the widget script
+    ==========*/
+    /* TODO: */
+    --hw-font-size-multiplier: 1;
+    --hw-base-font-size: calc(var(--hw-font-size-multiplier) * .75rem);
+
+    --hw-border-color: rgba(0, 0, 0, 0.1);
+    --hw-white-color: #ffffff;
+
+    /* gradients */
+    --hw-primary-gradient: linear-gradient(135deg, var(--hw-primary-color) 25%, var(--hw-primary-transparent-color) 100%);
+
+
+    --hw-golden-ratio: 1.618;
+
+    --hw-widget-width: calc(var(--hw-size) * 400px);
+    --hw-widget-height: calc(var(--hw-widget-width) * var(--hw-golden-ratio));
+
+    --hw-widget-margin: 20px;
+
+    --hw-header-padding: 2%;
+}
+
+/* unsetting all styles of everything inside #hudhud-widget-wrapper */
+#hudhud-widget-wrapper * {
+    all: unset;
+    margin: 0;
+    padding: 0;
+    border: 0;
+
+    font: inherit;
+    vertical-align: baseline;
+    direction: ltr;
+    text-align: left;
+}
+
+#hudhud-widget-wrapper {
+    & #hudhud-widget-container {
+        background: rgba(255, 255, 255, .75);
+        width: var(--hw-widget-width);
+        height: var(--hw-widget-height);
+        position: fixed;
+        bottom: 0;
+        margin: var(--hw-widget-margin);
+        border-radius: 10px;
+        border: .5px solid var(--hw-border-color);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        box-shadow: 0 0 10px 0 var(--hw-border-color);
+        backdrop-filter: blur(5px);
+        z-index: 999999999;
+        transform: scaleX(0) scaleY(0);
+        transition: all .2s ease-in-out;
+        transform-origin: bottom right;
+
+        & div#hudhud-widget-header {
+            background: var(--hw-primary-gradient);
+            width: calc(100% - 2 * var(--hw-header-padding));
+            height: calc(15% - 2 * var(--hw-header-padding) + 20px);
+            padding: var(--hw-header-padding);
+            display: flex;
+            border-radius: 10px 10px 0 0;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-grow: 0;
+            flex-shrink: 1;
+            flex-basis: auto;
+
+            & div#hudhud-widget-header-title {
+                width: 70%;
+                height: 100%;
+                display: flex;
+                flex-direction: column;
+                justify-content: flex-start;
+
+                & h1 {
+                    font-size: calc(var(--hw-base-font-size) * 1.6);
+                    font-weight: 600;
+                    color: var(--hw-white-color);
+                    margin: 0;
+                }
+
+                & h2 {
+                    font-size: calc(var(--hw-base-font-size) * 1.5);
+                    color: var(--hw-white-color);
+                    margin-top: 5%;
+                }
+            }
+
+            & div#hudhud-widget-header-logo {
+                width: 15%;
+                height: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+
+                & img {
+                    width: 100%;
+                    height: auto;
+                    overflow: hidden;
+                    border-radius: 50px;
+                    object-fit: cover;
+                }
+            }
+
+            & div#hudhud-widget-header-actions {
+                width: 15%;
+                height: 100%;
+                display: flex;
+                flex-direction: row;
+                justify-content: space-around;
+                align-items: flex-start;
+
+                & i {
+                    font-size: calc(var(--hw-base-font-size) * 2);
+                    color: var(--hw-white-color);
+                    cursor: pointer;
+                }
+
+                & i.hudhud-widget-close-icon {
+                    display: flex;
+                    align-items: center;
+                    background-color: rgb(255 255 255 / 15%);
+                    border-radius: 50%;
+                    padding: 3px;
+                    margin: 3px;
+                    margin-top: -3px;
+                    transition: all 0.2s ease-in-out;
+
+                    &:hover {
+                        background-color: rgb(255 255 255 / 100%);
+                        color: var(--hw-primary-color);
+                    }
+                }
+            }
+        }
+
+        & div#hudhud-widget-footer {
+            width: 100%;
+            height: 5%;
+            background: var(--hw-primary-gradient);
+            color: var(--hw-white-color);
+            display: flex;
+            flex-direction: column;
+            align-content: center;
+            justify-content: space-between;
+            align-items: center;
+            line-height: 1;
+            border-radius: 0px 0px 10px 10px;
+            margin-bottom: 0px;
+            flex-grow: 0;
+            flex-shrink: 1;
+            flex-basis: auto;
+
+            div#hudhud-widget-footer-separator {
+                height: 10px;
+                width: 100%;
+                display: block;
+                background-color: rgba(255, 255, 255, .85);
+                border-radius: 0 0 10px 10px;
+            }
+
+            & #hudhud-widget-footer-text {
+                display: flex;
+                width: 100%;
+                justify-content: center;
+                padding: 5px;
+                font-size: calc(var(--hw-base-font-size) * 1);
+            }
+        }
+    }
+
+    & .hudhud-widget-right-position {
+        right: 0;
+        left: unset;
+        transform-origin: bottom right !important;
+    }
+
+    & .hudhud-widget-left-position {
+        right: unset;
+        left: 0;
+        transform-origin: bottom left !important;
+    }
+
+    & .hudhud-widget-is-open {
+        transform: scaleX(1) scaleY(1) !important;
+    }
+
+    & #hudhud-widget-open-button {
+        z-index: 9999999999;
+        background: var(--hw-primary-color);
+        opacity: 0.85;
+        font-weight: 600;
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 66px;
+        height: 66px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: fixed;
+        bottom: 10px;
+        box-shadow: 0 0 6px rgba(0, 0, 0, .16), 0 6px 12px rgba(0, 0, 0, .32);
+        cursor: pointer;
+        outline: none !important;
+        transition: all 0.2s ease-in-out;
+
+        &:hover {
+            opacity: 1;
+            width: 77px;
+            height: 77px;
+        }
+
+        & i {
+            font-size: calc(var(--hw-base-font-size) * 3);
+        }
+
+        & img.hudhud-widget-logo {
+            width: 100%;
+            height: 100%;
+        }
+    }
+
+    & .hudhud-widget-button-is-open {
+        width: 30px !important;
+        height: 30px !important;
+        opacity: 1 !important;
+        margin-bottom: 13px;
+        margin-right: calc(var(--hw-widget-margin)/2);
+        box-shadow: unset !important;
+
+        & i {
+            font-size: calc(var(--hw-base-font-size) * 2) !important;
+        }
+    }
+
+    & .hudhud-widget-button-left-position {
+        right: unset;
+        left: 10px !important;
+    }
+
+    & .hudhud-widget-button-right-position {
+        left: unset;
+        right: 10px !important;
+    }
+
+    & .hudhud-widget-button-is-open.hudhud-widget-button-left-position {
+        margin-right: unset !important;
+        margin-left: 13px !important;
+    }
+
+    & .hudhud-widget-button-is-open.hudhud-widget-button-right-position {
+        margin-left: unset !important;
+        margin-right: 13px !important;
+    }
+
+    & .initialized-state {
+        transition: none !important;
+    }
+
+    & div#hudhud-widget-warning-popup {
+        opacity: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        position: fixed;
+        height: calc(var(--hw-widget-height) * .3);
+        width: calc(var(--hw-widget-width) + 2px);
+        margin: var(--hw-widget-margin);
+        bottom: 0px;
+        background: rgba(0, 0, 0, 0.5);
+        backdrop-filter: blur(5px);
+        z-index: 9999999999;
+        border-radius: 8px;
+        color: var(--hw-white-color);
+        transition: all .2s ease-in-out;
+
+        & h2 {
+            font-size: calc(var(--hw-base-font-size) * 1.3);
+            font-weight: 600;
+            display: block;
+            padding: 20px;
+        }
+
+        & .hudhud-widget-warning-popup-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            width: 100%;
+            padding: 10px;
+            align-items: center;
+
+            & button {
+                width: 50%;
+                font-size: calc(var(--hw-base-font-size) * 1);
+                font-weight: 400;
+                text-align: center !important;
+                background: var(--hw-primary-color);
+                color: var(--hw-white-color);
+                border: none;
+                border-radius: 8px;
+                padding: 5px 10px;
+                cursor: pointer;
+                transition: background-color .2s ease-in-out;
+
+                &:hover {
+                    background-color: var(--hw-white-color);
+                    color: var(--hw-primary-color);
+                }
+            }
+
+            button#hudhud-widget-warning-popup-cancel-button {
+                background-color: transparent !important;
+                border: .75px solid var(--hw-white-color) !important;
+
+                &:hover {
+                    background-color: var(--hw-white-color) !important;
+                    color: var(--hw-primary-color) !important;
+                }
+            }
+        }
+    }
+
+    & .hudhud-widget-popup-hidden {
+        opacity: 0 !important;
+    }
+
+    & .hudhud-widget-warning-popup-right-position {
+        right: 0;
+        left: unset;
+    }
+
+    & .hudhud-widget-warning-popup-left-position {
+        right: unset;
+        left: 0;
+    }
+
+    & div#hudhud-widget-reference-popup {
+        right: 0;
+        opacity: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: center;
+        position: fixed;
+        height: calc(var(--hw-widget-height)*.75);
+        width: calc(var(--hw-widget-width) + 1px);
+        margin: var(--hw-widget-margin);
+        bottom: 0px;
+        background: linear-gradient(180deg, var(--hw-secondary-transparent-color) 50%, #00000050 100%);
+        backdrop-filter: blur(10px);
+        z-index: 9999999999;
+        border-radius: 8px;
+        color: var(--hw-primary-color);
+        transition: all .2s ease-in-out;
+        border-radius: 8px;
+        transform-origin: bottom;
+        transform: scale(1);
+
+        .hudhud-widget-reference-popup-actions {
+            display: flex;
+            width: 100% !important;
+            align-items: center;
+            justify-content: flex-end;
+
+            button#hudhud-widget-reference-popup-close-button {
+                display: flex;
+                background: var(--hw-secondary-transparent-color);
+                border: .5px solid var(--hw-primary-color);
+                color: var(--hw-primary-color);
+                border-radius: 5px;
+                padding: 5px 10px;
+                margin: 10px;
+                align-items: center;
+                transition: all .2s ease-in-out;
+                font-size: calc(var(--hw-base-font-size) * 1);
+                font-weight: bold;
+
+                & i {
+                    font-size: calc(var(--hw-base-font-size) * 2);
+                    margin: 3px;
+                }
+
+                &:hover {
+                    background: var(--hw-primary-color);
+                    color: var(--hw-white-color);
+                }
+            }
+        }
+
+        & .hudhud-widget-reference-popup-content {
+            display: flex !important;
+            flex-direction: column !important;
+            width: 100%;
+            height: 100%;
+            margin-bottom: 5px;
+            overflow-y: scroll;
+            scroll-behavior: smooth;
+            scrollbar-width: none;
+
+            & h1 {
+                text-align: center !important;
+                font-size: calc(var(--hw-base-font-size) * 1.75);
+                font-weight: 500;
+            }
+
+            & .hudhud-widget-reference-popup-content-list {
+                display: flex !important;
+                flex-direction: column !important;
+                padding: 15px !important;
+                gap: 20px !important;
+
+                & .hudhud-widget-reference-popup-content-item {
+                    display: flex !important;
+                    flex-direction: column !important;
+                    gap: 5px !important;
+                    border: .75px solid var(--hw-secondary-color);
+                    border-radius: 8px;
+                    padding: 10px;
+                    background: #ffffff80;
+
+                    & h2 {
+                        font-size: calc(var(--hw-base-font-size) * 1.35);
+                        color: #777777;
+                    }
+
+                    & h3 {
+                        font-size: calc(var(--hw-base-font-size) * 1.85);
+                        font-weight: 500;
+                    }
+
+                    & h4 {
+                        font-size: calc(var(--hw-base-font-size) * 1.75);
+                        font-weight: 500;
+                        display: flex;
+                        align-items: center;
+                    }
+
+                    & h5 {
+                        margin-left: 10px;
+                        font-size: calc(var(--hw-base-font-size) * 1.60);
+                        font-weight: 500;
+                        display: flex;
+                        align-items: center;
+                    }
+
+                    & h6 {
+                        margin-left: 20px;
+                        font-size: calc(var(--hw-base-font-size) * 1.5);
+                        font-weight: 500;
+                        color: #666666;
+                        display: flex;
+                        align-items: center;
+                    }
+
+                    & p {
+                        margin-top: 15px;
+                        font-size: calc(var(--hw-base-font-size) * 1.25);
+                        color: #444444;
+                        white-space: pre-line;
+                    }
+                }
+            }
+        }
+    }
+}
+
+/* Widget body section */
+#hudhud-widget-wrapper {
+    & #hudhud-widget-container {
+        #hudhud-widget-body {
+            width: 100%;
+            height: 60%;
+            flex-grow: 1;
+            flex-shrink: 1;
+            flex-basis: auto;
+
+            div#hudhud-widget-header-separator {
+                height: 10px;
+                display: block;
+                background-color: rgba(255, 255, 255, .85);
+                border-radius: 10px 10px 0 0;
+                margin-top: -10px;
+            }
+
+            & #hudhud-widget-chat-elements {
+                height: 100%;
+                display: flex;
+                flex-direction: column;
+                gap: 15px;
+                transition: all .2s ease-in-out;
+                overflow-y: scroll;
+                scroll-behavior: smooth;
+                scrollbar-width: none;
+
+                & .hudhud-widget-chat-message {
+                    width: auto;
+                    max-width: 80%;
+                    padding: 15px;
+                    display: flex;
+                    flex-direction: column;
+                    transition: all .2s ease-in-out;
+
+                    & .hudhud-widget-chat-message-content {
+                        display: flex !important;
+                        flex-direction: column;
+                        justify-content: space-between;
+
+                        & .author-details {
+                            width: 100% !important;
+                            display: flex !important;
+                            align-items: center;
+
+                            & .author-photo {
+                                width: 10% !important;
+                                height: auto !important;
+                                margin: 2.5% !important;
+                            }
+
+                            & img {
+                                width: 100% !important;
+                                height: auto !important;
+                                vertical-align: middle;
+                                position: relative;
+                                overflow: hidden;
+                                border-radius: 50%;
+                            }
+
+                            & .author-name-text {
+                                display: flex !important;
+                                width: 100% !important;
+                                flex-direction: column;
+                                justify-content: flex-start;
+
+                                & .author-name {
+                                    color: #9e9ea8 !important;
+                                    font-weight: bold !important;
+                                    font-size: calc(var(--hw-base-font-size) * 1) !important;
+                                }
+
+                                & .author-time {
+                                    color: #909090 !important;
+                                    font-size: calc(var(--hw-base-font-size) * 1) !important;
+                                }
+                            }
+                        }
+
+                        & .message-content {
+                            width: fit-content;
+                            background: var(--hw-primary-color) !important;
+                            color: var(--hw-white-color) !important;
+                            padding: 10px 8px !important;
+                            border-radius: 4px !important;
+                            font-size: calc(var(--hw-base-font-size) * 1.2)
+                        }
+                    }
+
+                    & .hudhud-widget-chat-message-footer {
+                        display: flex !important;
+                        flex-direction: row !important;
+                        align-content: flex-start !important;
+                        justify-content: space-around !important;
+                        padding: 5px !important;
+
+                        & .hudhud-widget-chat-message-references {
+                            width: 50% !important;
+
+                            & button.hudhud-widget-chat-message-reference-button {
+                                display: flex !important;
+                                align-items: center !important;
+                                background: #ffffffc2 !important;
+                                padding: 2px 7px !important;
+                                border-radius: 4px !important;
+                                font-size: calc(var(--hw-base-font-size) * .8) !important;
+                                border: 1px solid var(--hw-primary-color) !important;
+                                color: var(--hw-primary-color) !important;
+                                transition: all .2s ease-in-out;
+                                cursor: pointer;
+
+                                & i {
+                                    font-size: calc(var(--hw-base-font-size) * 1) !important;
+                                    margin: 3px !important;
+                                }
+
+                                &:hover {
+                                    background: var(--hw-primary-color) !important;
+                                    color: var(--hw-white-color) !important;
+                                }
+                            }
+                        }
+
+                        & .hudhud-widget-chat-message-actions {
+                            width: 50% !important;
+                            display: flex !important;
+                            justify-content: flex-end;
+
+                            & .hudhud-widget-chat-message-feedback-button {
+                                margin: 3px !important;
+                                color: #b1b1b1 !important;
+                                cursor: pointer;
+                                transition: all .2s ease-in-out;
+                                display: inline-block;
+                                height: 20px !important;
+
+                                & i {
+                                    font-size: calc(var(--hw-base-font-size) * 1.3) !important;
+                                    transition: all .2s ease-in-out;
+
+                                    &:hover {
+                                        color: var(--hw-primary-color) !important;
+                                        font-size: calc(var(--hw-base-font-size) * 1.5) !important;
+                                    }
+                                }
+                            }
+
+                            & .hudhud-widget-chat-message-feedback-button.feedback-sent {
+                                color: var(--hw-primary-color) !important;
+                                font-size: calc(var(--hw-base-font-size) * 1.5) !important;
+                            }
+                        }
+                    }
+                }
+
+                & .hudhud-widget-chat-message.agent-message {
+                    margin-left: 12% !important;
+                    margin-right: 0 !important;
+
+                    & .author-details {
+                        flex-direction: row-reverse !important;
+                    }
+
+                    & .author-name-text {
+                        align-items: flex-end !important;
+                    }
+
+                    & .message-content {
+                        white-space: pre-line;
+                        width: fit-content;
+                        align-self: end;
+                        background: rgba(0, 0, 0, 0.03) !important;
+                        color: #555 !important;
+                        backdrop-filter: blur(1px);
+                    }
+
+                    & .hudhud-widget-typing-effect {
+                        width: 50px;
+                        height: 15px;
+                        border-radius: 50px;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+
+                        & .hudhud-widget-typing-effect-dot {
+                            width: 7px;
+                            height: 7px;
+                            background: #cacaca;
+                            border-radius: 50%;
+                            margin: 3px;
+                            transition: all 0.5s ease-in-out;
+                            animation: hudhud-widget-typing-animation 1s infinite;
+                        }
+
+                        /* match third child of & .hudhud-widget-typing-effect-dot */
+                        & .hudhud-widget-typing-effect-dot:nth-child(0) {
+                            animation-delay: 1s !important;
+                        }
+
+                        & .hudhud-widget-typing-effect-dot:nth-child(1) {
+                            animation-delay: .5s !important;
+                        }
+
+                        & .hudhud-widget-typing-effect-dot:nth-child(2) {
+                            animation-delay: .25s !important;
+                        }
+                    }
+                }
+
+                & .hudhud-widget-chat-message.user-message {
+                    & .hudhud-widget-chat-message-content {
+                        & .author-details {
+                            & .author-photo {
+                                width: 0% !important;
+                            }
+                        }
+                    }
+                }
+
+                & .hudhud-widget-event-message {
+                    width: 80% !important;
+                    min-height: 40px !important;
+                    display: flex !important;
+                    margin: 15px auto !important;
+                    flex-direction: column;
+                    justify-content: center;
+                    align-items: center;
+                    border: .95px solid #e6e6e6 !important;
+                    border-radius: 7px !important;
+                    background: rgba(255, 255, 255, .5) !important;
+
+                    & .message-content {
+                        font-size: calc(var(--hw-base-font-size) * 1) !important;
+                        font-weight: bold;
+                    }
+                }
+
+                & .hudhud-widget-event-message.hudhud-widget-info {
+                    background: #2196f34d !important;
+                    color: #0d416b !important;
+                }
+
+                & .hudhud-widget-event-message.hudhud-widget-warning {
+                    background: #ffe60021 !important;
+                    color: #583f00 !important;
+                }
+
+                & .hudhud-widget-event-message.hudhud-widget-error {
+                    background: #f443364d !important;
+                    color: #6d0b04 !important;
+                }
+
+                & .hudhud-widget-inline-buttons-container {
+                    display: flex !important;
+                    flex-direction: row;
+                    align-content: center;
+                    align-items: center;
+                    flex-wrap: wrap !important;
+                    gap: 10px !important;
+                    justify-content: flex-end !important;
+                    padding: 10px !important;
+
+                    & .hudhud-widget-inline-button {
+                        text-align: center !important;
+                        height: 20px !important;
+                        min-width: 25px !important;
+                        border: 1px solid var(--hw-primary-color) !important;
+                        color: var(--hw-primary-color) !important;
+                        padding: 2px 7px !important;
+                        border-radius: 3px !important;
+                        background: #ffffff80 !important;
+                        transition: all .2s ease-in-out;
+                        font-size: calc(var(--hw-base-font-size) * 1.2);
+                        cursor: pointer;
+                        text-overflow: ellipsis;
+                        overflow: hidden; 
+                        max-width: 100%; 
+                        white-space: nowrap;
+
+                        &:hover {
+                            background: var(--hw-primary-color) !important;
+                            color: var(--hw-white-color) !important;
+                        }
+                    }
+                }
+
+
+            }
+        }
+
+        & #hudhud-widget-editor {
+            width: calc(95% - 2* 1.5* 15px);
+            height: calc(15% - 2* 1.5* 5px);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            background: rgb(255 255 255);
+            border: .5px solid #d5d5d5;
+            border-radius: 7px;
+            padding: 5px 15px;
+            margin: 5px;
+            box-shadow: 0 0 2px 5px rgba(0, 0, 0, .02);
+            transition: all .2s ease-in-out;
+
+            & #hudhud-widget-editor-input {
+                width: 100%;
+                height: 80%;
+                border: none;
+                font-size: calc(var(--hw-base-font-size) * 1.2);
+                outline: none;
+
+                & textarea {
+                    width: 100%;
+                    height: 100%;
+                    resize: none;
+                    font-size: calc(var(--hw-base-font-size) * 1.2);
+                    outline: none;
+                    background: transparent;
+                    border: none;
+                    color: #666666;
+                    display: block;
+                    transition: all .2s ease-in-out;
+
+                    &::placeholder {
+                        color: #b5b5b5;
+                    }
+                }
+            }
+        }
+
+        & div#hudhud-widget-editor-actions {
+            height: 10%;
+            display: flex;
+            width: 100%;
+            flex-direction: row;
+            justify-content: space-between;
+            color: #777;
+            padding: 5px 5px 15px 5px;
+            font-size: calc(var(--hw-base-font-size) * 1.2);
+
+            & #hudhud-widget-editor-attachment button {
+                background: transparent;
+                border: none;
+                cursor: pointer;
+                transition: all .2s ease-in-out;
+                padding: 0px 3px;
+
+                &:hover {
+                    color: #333;
+                }
+            }
+
+            & #hudhud-widget-editor-send-button {
+                background: var(--hw-primary-color);
+                color: var(--hw-white-color);
+                border: none;
+                border-radius: 5px;
+                padding: 5px 10px;
+                cursor: pointer;
+                transition: all .2s ease-in-out;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                font-size: calc(var(--hw-base-font-size) * 1);
+                width: 50px;
+                height: 20px;
+                line-height: 1;
+                margin-top: -10px;
+                transition: all .2s ease-in-out;
+
+                &:hover {}
+            }
+        }
+
+        & #hudhud-widget-editor.hudhud-widget-disabled-editor {
+            background-color: #a2a2a28f !important;
+            opacity: .3;
+
+            & #hudhud-widget-editor-input {
+                cursor: not-allowed !important;
+
+                & textarea {
+                    cursor: not-allowed !important;
+
+                    &::placeholder {
+                        color: #8b8b8b !important;
+                    }
+                }
+            }
+
+            & div#hudhud-widget-editor-actions {
+                & #hudhud-widget-editor-send-button {
+                    cursor: not-allowed !important;
+                    background-color: #00000050 !important;
+                }
+            }
+        }
+    }
+}
+
+/* RTL override */
+#hudhud-widget-wrapper.hudhud-widget-rtl * {
+    direction: rtl !important;
+    text-align: right !important;
+
+    & .hudhud-widget-reflectable-icon {
+        transform: scaleX(-1);
+    }
+}
+
+#hudhud-widget-wrapper.hudhud-widget-rtl #hudhud-widget-container {
+    & #hudhud-widget-header {
+        --hw-primary-gradient: linear-gradient(225deg, var(--hw-primary-color) 25%, var(--hw-primary-transparent-color) 100%);
+    }
+
+    & #hudhud-widget-body {
+        & #hudhud-widget-chat-elements {
+            & .hudhud-widget-chat-message.agent-message {
+                margin-right: 12% !important;
+                margin-left: 0 !important;
+            }
+        }
+    }
+}
+
+#hudhud-widget-wrapper.hudhud-widget-rtl #hudhud-widget-reference-popup {
+    & .hudhud-widget-reference-popup-content {
+        & .hudhud-widget-reference-popup-content-list {
+            & .hudhud-widget-reference-popup-content-item {
+                & h5 {
+                    margin-left: 0px;
+                    margin-right: 10px;
+                }
+
+                & h6 {
+                    margin-left: 0px;
+                    margin-right: 20px;
+                }
+            }
+        }
+    }
+}
+
+/* Mobile styles */
+@media only screen and (max-width: 600px) {
+    #hudhud-widget-wrapper {
+        & #hudhud-widget-container {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            border-radius: 0;
+            box-shadow: none;
+
+            & div#hudhud-widget-header {
+                border-radius: 0px;
+            }
+
+            & #hudhud-widget-body {
+                height: 70%;
+            }
+
+            & div#hudhud-widget-footer {
+                border-radius: 0px;
+            }
+        }
+
+        & .hudhud-widget-button-is-open {
+            bottom: 0 !important;
+            margin: 0px !important;
+            width: 7vw !important;
+            height: 7vw !important;
+        }
+
+        & #hudhud-widget-warning-popup {
+            width: 100% !important;
+            height: 30% !important;
+            margin: 0 !important;
+        }
+
+        & div#hudhud-widget-reference-popup {
+            width: 100% !important;
+            height: 100% !important;
+            margin: 0 !important;
+            background: linear-gradient(180deg, var(--hw-secondary-color) 50%, #000000a8 100%);
+
+            & button#hudhud-widget-reference-popup-close-button {
+                font-size: calc(var(--hw-base-font-size) * 1) !important;
+            }
+        }
+    }
+}
+
+/* Animations */
+@keyframes hudhud-widget-typing-animation {
+    0% {
+        transform: translateY(0);
+        transition: all 0.5s ease-in-out;
+    }
+
+    50% {
+        transform: translateY(-5px);
+        transition: all 0.5s ease-in-out;
+    }
+
+    100% {
+        transform: translateY(0);
+        transition: all 0.5s ease-in-out;
+    }
+}

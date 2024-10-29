@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conversations Inbox</title>
+
+    <!-- Quill scripts -->
+    <script src="../../../static/pwa/common/vendor/js/quill.js"></script>
+    <script src="../../../static/pwa/common/vendor/js/DynamicQuillTools.js"></script>
+    <script type="module" src="../../../static/pwa/common/vendor/js/emoji-picker/emoji-picker-index.js"></script>
+
+    <!-- Bootstrap 5 -->
+    <link rel="stylesheet" href="../../../static/pwa/common/vendor/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../../static/pwa/common/css/bs5-customization.css">
+
+    <!-- Quill assets -->
+    <link rel="stylesheet" href="../../../static/pwa/pages/studio/css/quill-styles.css">
+    <link rel="stylesheet" href="../../../static/pwa/common/vendor/css/quill.snow.css">
+    <link rel="stylesheet" href="../../../static/pwa/common/vendor/css/quill.bubble.css">
+
+    <link rel="stylesheet" href="../../../static/pwa/pages/inbox/css/inbox-styles.css">
+    <script src="../../../static/pwa/common/vendor/js/jquery-3.7.1.min.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="../../../static/pwa/common/vendor/css/iconoir.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="../../../static/pwa/common/vendor/css/google-fonts.css">
+
+    <script src="../../../static/pwa/common/shared-components/said-bar/Sidebar.js" type="module"></script>
+    <link rel="stylesheet" href="../../../static/pwa/common/shared-components/said-bar/style.css">
+
+    {% block content %}
+    <script>
+        // let session_key = '{{ session_key }}';
+        // let core_url = '{{ core_url }}';
+        // let socket_url = '{{ socket_url }}';
+        // let app_key = '{{ pusher_app_key }}';
+        // let socket_channel_id = '{{ socket_channel_id }}';
+        let available_agents = {{ agents| safe }};
+        // let available_tags = {{ tags| safe }};
+        // let available_chatbots = {{ chatbots| safe }};
+        // let whatsapp_templates = {{ templates| safe }};
+        // let all_channels = {{ channels| safe }};
+    </script>
+    {% endblock %}
+</head>
+
+<body>
+    <div class="main-container">
+        <aside id="sidebar"></aside>
+        <div class="row app-container">
+            <!-- Sidebar -->
+        </div>
+    </div>
+    <script src="../../../static/pwa/common/vendor/js/bootstrap.bundle.min.js"></script>
+    <script src="../../../static/pwa/pages/inbox/js/views/app.js" type="module"></script>
+    <!-- this is required to enable emoji in editor -->
+    <div id="emoji-tooltip-container" class="emoji-tooltip" role="emoji-tooltip"></div>
+        <emoji-picker id="picker" locale="ar" class="light" emoji-version="15.0" style="display: none;"></emoji-picker>
+    </div>
+</body>
+
+</html>

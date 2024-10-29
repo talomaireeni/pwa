@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Integrations Hub</title>
+
+    <!-- Bootstrap 5 -->
+    <link rel="stylesheet" href="../../../static/pwa/common/vendor/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../../static/pwa/common/css/bs5-customization.css">
+
+    <link rel="stylesheet" href="../../../static/pwa/pages/inbox/css/inbox-styles.css">
+    <script src="../../../static/pwa/common/vendor/js/jquery-3.7.1.min.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="../../../static/pwa/common/vendor/css/iconoir.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="../../../static/pwa/common/vendor/css/google-fonts.css">
+    <style rel="stylesheet" href="../../../static/pwa/pages/integrations/style.css"></style>
+
+    <script src="../../../static/pwa/common/shared-components/said-bar/Sidebar.js" type="module"></script>
+    <link rel="stylesheet" href="../../../static/pwa/common/shared-components/said-bar/style.css">
+    <style>
+    </style>
+
+    {% block content %}
+    <script>
+    </script>
+    {% endblock %}
+</head>
+
+<body>
+    <div class="container main-container mt-5">
+        <aside id="sidebar"></aside>
+        <div class="row app-container">
+
+            <!-- Page Header -->
+            <div class="d-flex justify-content-between align-items-center">
+                <h1>Integrations Hub</h1>
+            </div>
+
+            <!-- Page Content -->
+            <div class="container py-4">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h1 class="display-4 mb-0">Integrations</h1>
+                    <a href="/new-integration.html" class="btn btn-primary">+ Add New REST API</a>
+                </div>
+
+                <div class="text-center mb-4">
+                    <div class="btn-group" id="typeToggle" role="group" aria-label="Integration type toggle">
+                        <button type="button" class="btn btn-outline-primary type-toggle active" data-type="rest">REST API</button>
+                        <button type="button" class="btn btn-outline-primary type-toggle"
+                            data-type="webhook">Webhook</button>
+                    </div>
+                </div>
+
+                <div class="row mb-4">
+                    <div class="col-6">
+                        <div class="search-container">
+                            <i class="search-icon"></i>
+                            <input type="text" id="searchInput" class="form-control ps-5"
+                                placeholder="Search integrations...">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Integration Name</th>
+                                <th>Type</th>
+                                <th>Status</th>
+                                <th>Created Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="integrationsTable"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="../../../static/pwa/common/vendor/js/bootstrap.bundle.min.js"></script>
+    <script src="../../../static/pwa/pages/integrations/js/data.js"></script>
+    <script src="../../../static/pwa/pages/integrations/js/integrations/list.js"></script>
+</body>
+
+</html>
