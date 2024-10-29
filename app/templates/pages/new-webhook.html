@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Integrations Hub</title>
+
+    <!-- Bootstrap 5 -->
+    <link rel="stylesheet" href="../../../static/pwa/common/vendor/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../../static/pwa/common/css/bs5-customization.css">
+
+    <link rel="stylesheet" href="../../../static/pwa/pages/inbox/css/inbox-styles.css">
+    <script src="../../../static/pwa/common/vendor/js/jquery-3.7.1.min.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="../../../static/pwa/common/vendor/css/iconoir.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="../../../static/pwa/common/vendor/css/google-fonts.css">
+    <style rel="stylesheet" href="../../../static/pwa/pages/integrations/style.css"></style>
+
+    <script src="../../../static/pwa/common/shared-components/said-bar/Sidebar.js" type="module"></script>
+    <link rel="stylesheet" href="../../../static/pwa/common/shared-components/said-bar/style.css">
+    <style>
+    </style>
+
+    {% block content %}
+    <script>
+    </script>
+    {% endblock %}
+</head>
+
+<body>
+    <div class="container main-container mt-5">
+        <aside id="sidebar"></aside>
+        <div class="row app-container">
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="card-title mb-4">New Webhook</h2>
+
+                    <form id="webhookForm">
+                        <div class="mb-3">
+                            <label class="form-label">Webhook Name</label>
+                            <input type="text" class="form-control" name="name" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Webhook URL</label>
+                            <input type="url" class="form-control bg-light" name="webhookUrl"
+                                value="https://webhooks.hudhud.services/XYZ" disabled>
+                            <small class="text-muted">This is your unique webhook endpoint</small>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label d-flex align-items-center">
+                                Payload Sample
+                                <small class="text-muted mx-1">(Enter a valid JSON sample that represents your webhook
+                                    payload structure)</small>
+                                <i class="ms-1 info-icon" data-bs-toggle="tooltip" data-bs-html="true"
+                                    title='Example JSON structure:<br><pre>{
+                                        "event": "order.created",
+                                        "data": {
+                                          "orderId": "ORD-123",
+                                          "amount": 99.99,
+                                          "status": "pending"
+                                        }
+                                      }</pre>'></i>
+                            </label>
+                            <textarea class="form-control font-monospace" name="payloadStructure" rows="8"
+                                required></textarea>
+                        </div>
+
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-primary">Save Webhook</button>
+                            <a href="/test/integrations" class="btn btn-outline-secondary">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="../../../static/pwa/common/vendor/js/bootstrap.bundle.min.js"></script>
+    <script src="../../../static/pwa/pages/integrations/js/data.js"></script>
+    <script type="module" src="../../../static/pwa/pages/integrations/js/new-webhook.js"></script>
+</body>
+
+</html>

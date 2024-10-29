@@ -1,0 +1,128 @@
+.emoji-tooltip:not(.shown) {
+    display: none;
+}
+
+.emoji-tooltip.shown {
+    position: absolute;
+    z-index: 99999;
+    opacity: 1;
+}
+
+/* resetting some quill styles - begin */
+.ql-toolbar.ql-snow {
+    border: unset !important;
+}
+
+.ql-container.ql-snow {
+    border: unset !important;
+}
+
+/* resetting some quill styles - end */
+
+#editor-container {
+    height: 375px;
+}
+
+.editor-wrapper {
+    border: 1px solid #e1e1e1;
+    border-radius: 8px;
+}
+
+button.ql-span {
+    width: 15rem !important;
+}
+
+.ql-formats-end {
+    position: absolute;
+    right: 0;
+}
+
+.complex {
+    border-radius: 10px;
+    border: 1px solid #e1e1e1;
+    margin: 0.3rem;
+    padding: 2px;
+    background: var(--complex-bgcolor);
+    color: var(--font-color);
+}
+
+.inner {
+    border-radius: 1rem;
+    padding-left: 0.6rem;
+    padding-right: 0.6rem;
+}
+
+.formatting {
+    font-weight: bold;
+    font-style: italic;
+    text-decoration: underline;
+}
+
+.use-variable-button {
+    width: 121.574px !important;
+    border: 1px solid var(--primary-color) !important;
+    color: var(--primary-color) !important;
+    border-radius: 20px !important;
+    background: rgba(49, 134, 252, .07) !important;
+}
+
+.use-variable-button:hover {
+    background: rgba(49, 134, 252, .15) !important;
+}
+
+.nested {
+    margin-left: 0.3rem;
+    margin-right: 0.3rem;
+}
+
+.inline-icon {
+    width: 15px;
+    height: 15px;
+    vertical-align: middle;
+    margin: 0 3px;
+}
+
+.bottom-toolbar {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 5px;
+}
+
+
+.counter {
+    /* border: 1px solid #ccc;
+    border-width: 0px 1px 1px 1px; */
+    color: #aaa;
+    padding: 5px 15px;
+    text-align: right;
+    font-size: 14px;
+    font-family: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+}
+
+.counter-warning {
+    color: var(--bs-danger);
+}
+
+button.picker-btn {
+    font-size: 18px;
+    margin: 0px 3px !important;
+}
+
+/* emoji picker */
+emoji-picker {
+    width: 400px;
+    height: 300px;
+    --num-columns: 6;
+    --emoji-size: 1.5rem;
+    /* --background: gray; */
+}
+
+/* node details manager form elements */
+.invalid-element {
+    border-color: var(--bs-danger);
+}
+
+.error-message {
+    color: var(--bs-danger);
+    padding: 5px;
+}

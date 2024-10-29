@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Knowledge Base Manager</title>
+
+    <!-- Bootstrap 5 -->
+    <link rel="stylesheet" href="../../../static/pwa/common/vendor/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../../static/pwa/common/css/bs5-customization.css">
+
+    <link rel="stylesheet" href="../../../static/pwa/pages/inbox/css/inbox-styles.css">
+    <script src="../../../static/pwa/common/vendor/js/jquery-3.7.1.min.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="../../../static/pwa/common/vendor/css/iconoir.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="../../../static/pwa/common/vendor/css/google-fonts.css">
+
+    <script src="../../../static/pwa/common/shared-components/said-bar/Sidebar.js" type="module"></script>
+    <link rel="stylesheet" href="../../../static/pwa/common/shared-components/said-bar/style.css">
+    <style>
+        .table-container {
+            overflow-x: auto;
+            border: 1px solid #dadada;
+            padding: 15px;
+            border-radius: 6px;
+            overflow: visible;
+
+            & hr {
+                height: .5px !important;
+            }
+        }
+
+        .catalogItemsCount {
+            font-size: 14px;
+            color: #6c757d;
+        }
+
+        .file-details {
+            & ul.list-group {
+                max-height: 60vh;
+                overflow-y: scroll;
+            }
+        }
+    </style>
+
+    {% block content %}
+    <script>
+    </script>
+    {% endblock %}
+</head>
+
+<body>
+    <div class="container main-container mt-5">
+        <aside id="sidebar"></aside>
+        <div class="row app-container">
+
+            <!-- Page Header -->
+            <div class="d-flex justify-content-between align-items-center">
+                <h1>Knowledge Base Manager</h1>
+                <button id="create-new-catalog" class="btn btn-primary d-flex align-items-center"><i
+                        class="iconoir-plus mx-2"></i> Create New Catalog</button>
+            </div>
+
+            <!-- KB Catalogs -->
+            <div class="mt-4" id="kbCatalogsTable">
+                <!-- Catalogs will be appended here by JavaScript -->
+            </div>
+
+        </div>
+    </div>
+    <script src="../../../static/pwa/common/vendor/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function getFileType(mimeType) {
+            if (/pdf$/.test(mimeType)) {
+                return "PDF";
+            } else if (/(ms-excel|openxmlformats-officedocument\.spreadsheetml\.sheet)$/.test(mimeType)) {
+                return "Excel";
+            } else if (/(msword|vnd\.openxmlformats-officedocument\.wordprocessingml\.document)$/.test(mimeType)) {
+                return "Word";
+            } else {
+                return "Other";
+            }
+        }
+
+        // Function to render a source item (file)
+        function renderSourceItem(type, fileName, processingStatus) {
+            // Determine icon based on file type
+            let iconSrc;
+            switch (type) {
+                case 'pdf': iconSrc = '../../../static/pwa/common/images/icons/pdf.png'; break;
+                case 'word': iconSrc = '../../../static/pwa/common/images/icons/doc.png'; break;
+                case 'excel': iconSrc = '../../../static/pwa/common/images/icons/xls.png'; break;
+                default: iconSrc = '../../../static/pwa/common/images/icons/txt.png'; break;
+            }
+
+            // Create table row for source item
+            return $(`
+            <tr>
+            <td><img src="${iconSrc}" alt="${type} icon" style="width: 24px; height: 24px;"></td>
+            <td>${fileName}</td>
+            <td><span class="badge bg-secondary">${processingStatus}</span></td>
+            <td>
+                <div class="dropdown">
+                <button class="btn text-dark fs-5" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="iconoir-more-horiz"></i>
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="#">View Details</a></li>
+                    <li><a class="dropdown-item" href="#">Edit File</a></li>
+                    <li><a class="dropdown-item" href="#">Download</a></li>
+                    <li><a class="dropdown-item" href="#">Delete</a></li>
+                </ul>
+                </div>
+            </td>
+            </tr>
+        `);
+        }
+
+        // Function to render a catalog
+        function renderCatalog(catalogName, catalogItems) {
+            const catalogId = catalogName.replace(/\s+/g, '').toLowerCase();
+            const sourceItemsHTML = catalogItems.map(item => renderSourceItem(item.type, item.fileName, item.status));
+
+            const catalogTable = $(`
+            <div class="mb-5">
+            <div class="d-flex justify-content-between align-items-center">
+                <h4>${catalogName} <span class="catalogItemsCount">(${catalogItems.length} sources)</span></h4>
+                <div class="dropdown">
+                <button class="btn text-dark fs-4" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="iconoir-more-horiz"></i>
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="#">Edit Catalog</a></li>
+                    <li><a class="dropdown-item" href="#">Duplicate Catalog</a></li>
+                    <li><a class="dropdown-item" href="#">Archive Catalog</a></li>
+                    <li><a class="dropdown-item" href="#">Delete Catalog</a></li>
+                </ul>
+                </div>
+            </div>
+
+            <div class="table-container">
+                <table class="table table-borderless mt-3">
+                <thead>
+                    <tr>
+                    <th>Type</th>
+                    <th>File Name</th>
+                    <th>Status</th>
+                    <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Source items will be appended here -->
+                </tbody>
+                </table>
+                <hr />
+                <button class="add-new-source-btn btn btn-outline-primary d-flex align-items-center"><i class="iconoir-page-plus mx-2"></i>  Add New Source</button>
+            </div>
+            
+            </div>
+        `);
+
+            // Append source items into the catalog table
+            catalogTable.find('tbody').append(sourceItemsHTML);
+
+            // Add event listener for "+ Add New Source" button
+            catalogTable.find('.add-new-source-btn').click(function () {
+                $('#fileUploadModal').modal('show');
+            });
+
+            return catalogTable;
+        }
+
+        // Sample data
+        const catalogs = [
+            {
+                name: 'Marketing Materials',
+                items: [
+                    { type: 'pdf', fileName: 'Product_Manual_v1.2.pdf', status: 'Not Processed' },
+                    { type: 'word', fileName: 'Brochure.docx', status: 'In Progress' }
+                ]
+            },
+            {
+                name: 'Product Documentation',
+                items: [
+                    { type: 'pdf', fileName: 'API_Guide_v3.1.pdf', status: 'Processed' },
+                    { type: 'excel', fileName: 'Feature_List_2025.xlsx', status: 'Not Processed' }
+                ]
+            }
+        ];
+
+        // Append catalogs to the DOM
+        $(document).ready(function () {
+            catalogs.forEach(catalog => {
+                $('#kbCatalogsTable').append(renderCatalog(catalog.name, catalog.items));
+            });
+
+            // Open the modal when the "Add New Catalog" button is clicked
+            $('#create-new-catalog').click(function () {
+                $('#newCatalogModal').modal('show');
+            });
+
+            // Handle the save action for the new catalog
+            $('#saveCatalogButton').click(function () {
+                const catalogName = $('#catalogName').val();
+                const catalogDescription = $('#catalogDescription').val();
+
+                if (catalogName.trim() === '') {
+                    alert('Catalog name is required.');
+                    return;
+                }
+
+                // Add your logic to create the new catalog here.
+                console.log('New Catalog Created:', { name: catalogName, description: catalogDescription });
+
+                // Close the modal after saving
+                $('#newCatalogModal').modal('hide');
+            });
+
+            // Handle the upload action for the new source
+            $('#uploadSourceButton').click(function () {
+                const sourceFiles = $('#sourceFile').prop('files');
+
+                if (sourceFiles.length === 0) {
+                    alert('Please select at least one file to upload.');
+                    return;
+                }
+
+                if (sourceFiles.length > 10) {
+                    alert('You can upload up to 10 files at a time.');
+                    return;
+                }
+
+                const uploadedFiles = [];
+                for (let i = 0; i < sourceFiles.length; i++) {
+                    const sourceFile = sourceFiles[i];
+                    const fileName = sourceFile.name;
+                    const sourceType = sourceFile.type.split('/')[1];
+                    const fileSize = (sourceFile.size / 1024).toFixed(2) + ' KB';
+
+                    uploadedFiles.push({ file: sourceFile, type: sourceType, size: fileSize, name: fileName });
+                }
+
+                // Add your logic to upload the files here.
+                console.log('New Sources Uploaded:', uploadedFiles);
+
+                // Close the modal after uploading
+                $('#fileUploadModal').modal('hide');
+            });
+
+            // Update file details when files are selected
+            $('#sourceFile').change(function () {
+                const sourceFiles = $(this).prop('files');
+                const fileDetails = $('<ul class="list-group"></ul>');
+
+                for (let i = 0; i < sourceFiles.length; i++) {
+                    const sourceFile = sourceFiles[i];
+                    const sourceType = getFileType(sourceFile.type.split('/')[1]);
+                    const fileSize = (sourceFile.size / 1024).toFixed(2) + ' KB';
+                    const fileName = sourceFile.name;
+
+                    let iconSrc;
+                    switch (sourceType.toLowerCase()) {
+                        case 'pdf': iconSrc = '../../../static/pwa/common/images/icons/pdf.png'; break;
+                        case 'word': iconSrc = '../../../static/pwa/common/images/icons/doc.png'; break;
+                        case 'excel': iconSrc = '../../../static/pwa/common/images/icons/xls.png'; break;
+                        default: iconSrc = '../../../static/pwa/common/images/icons/txt.png'; break;
+                    }
+
+                    const listItem = $(`
+            <li class="list-group-item d-flex align-items-center">
+                <img src="${iconSrc}" alt="${sourceType} icon" style="width: 24px; height: 24px; margin-right: 10px;">
+                <div>
+                    <strong>${fileName}</strong><br>
+                    <span>Type:</span> <span class="text-muted">${sourceType}<br></span>
+                    <span>Size:</span> <span class="text-muted">${fileSize}</span>
+                </div>
+            </li>
+            `);
+                    fileDetails.append(listItem);
+                }
+
+                // Append file details list to the file details element
+                $('.file-details').html(fileDetails);
+            });
+        });
+    </script>
+</body>
+
+</html>
+
+
+<!-- New Catalog Modal -->
+<div class="modal fade" id="newCatalogModal" tabindex="-1" aria-labelledby="newCatalogModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h5 class="modal-title" id="newCatalogModalLabel">Add New Catalog</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <!-- Modal Body -->
+            <div class="modal-body">
+                <form id="newCatalogForm">
+                    <div class="mb-3">
+                        <label for="catalogName" class="form-label">Catalog Name</label>
+                        <input type="text" class="form-control" id="catalogName" placeholder="Enter catalog name"
+                            required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="catalogDescription" class="form-label">Description</label>
+                        <textarea class="form-control" id="catalogDescription" placeholder="Enter catalog description"
+                            rows="3"></textarea>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="saveCatalogButton">Save Catalog</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- File Upload Modal -->
+<div class="modal fade" id="fileUploadModal" tabindex="-1" aria-labelledby="fileUploadModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h5 class="modal-title" id="fileUploadModalLabel">Upload New Source</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <!-- Modal Body -->
+            <div class="modal-body" id="fileUploadForm">
+                <form>
+                    <div class="mb-3">
+                        <label for="sourceFile" class="form-label">Select File</label>
+                        <input class="form-control" type="file" id="sourceFile"
+                            accept=".pdf,.doc,.docx,.xls,.xlsx,.csv,.txt" multiple required>
+                        <small class="form-text text-muted">You can upload up to 10 files. Allowed file types: pdf, doc,
+                            docx, xls, xlsx, csv, txt.</small>
+                    </div>
+                    <div class="mb-3">
+                        <div class="form-label file-details"></div>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="uploadSourceButton">Upload</button>
+            </div>
+        </div>
+    </div>
+</div>
